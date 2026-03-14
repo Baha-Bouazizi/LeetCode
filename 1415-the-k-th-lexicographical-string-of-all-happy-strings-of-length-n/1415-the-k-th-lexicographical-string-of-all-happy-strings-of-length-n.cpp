@@ -1,22 +1,28 @@
 class Solution {
-    int n2;
-    string dfs(string prefix, int n, int k) {
-        if (n == 0)
-            return prefix;
-        for (char c = 'a'; c <= 'c'; c++) {
-            if (!prefix.empty() && c == prefix.back())
-                continue;
-            int cnt = (1 << (n2 - prefix.length() - 1));
-            if (cnt >= k)
-                return dfs(prefix + c, n - 1, k);
-            else
-                k -= cnt;
-        }
-        return "";
-    }
 public:
     string getHappyString(int n, int k) {
-        n2 = n;
-        return dfs("", n, k);
+
+        int total = 3 * (1<<(n-1));
+        if(k>total) return "";
+
+        k--;
+        string res="";
+        char last='\0';
+
+        for(int pos=0;pos<n;pos++){
+
+            int branch=1<<(n-pos-1);
+
+            vector<char> choices;
+            for(char c:{'a','b','c'})
+                if(c!=last) choices.push_back(c);
+
+            int idx=k/branch;
+            res+=choices[idx];
+            last=choices[idx];
+            k%=branch;
+        }
+
+        return res;
     }
 };

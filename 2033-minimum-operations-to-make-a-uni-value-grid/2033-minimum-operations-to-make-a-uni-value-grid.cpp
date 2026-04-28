@@ -1,26 +1,36 @@
 class Solution {
 public:
     int minOperations(vector<vector<int>>& grid, int x) {
-        vector<int> values;
-        for (const auto& row : grid) {
-            for (int val : row) {
-                values.push_back(val);
+        vector<int> nums;
+
+        // Flatten the grid
+        for (auto &row : grid) {
+            for (int num : row) {
+                nums.push_back(num);
             }
         }
 
-        sort(values.begin(), values.end());
-
-        for (int val : values) {
-            if (abs(val - values[0]) % x != 0) {
+        // Check feasibility
+        int base = nums[0];
+        for (int num : nums) {
+            if ((num - base) % x != 0) {
                 return -1;
             }
         }
 
-        int median = values[values.size() / 2];
-        int operations = 0;
+        // Normalize values (convert to steps)
+        for (int &num : nums) {
+            num = (num - base) / x;
+        }
 
-        for (int val : values) {
-            operations += abs(val - median) / x;
+        // Sort and find median
+        sort(nums.begin(), nums.end());
+        int median = nums[nums.size() / 2];
+
+        // Count operations
+        int operations = 0;
+        for (int num : nums) {
+            operations += abs(num - median);
         }
 
         return operations;
